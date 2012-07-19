@@ -2,6 +2,7 @@
   "name": "mini-event-log",
   "version": "0.0.1",
   "private": true,
+  "main": "app.js",
   "scripts": {
     "start": "node app"
   },
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "express": "3.0.0beta6",
-    "jade": "*"
+    "jade": "*",
+    "config": "*"
   }
 }

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Mini Event Log
+  form.loginForm(method='post', name='loginForm')
+    if flashMessage.length > 0
+      .errorMessage #{flashMessage}
+    label.loginField Email
+      input(type='text', name='email')
+    label.loginField Password
+      input(type='password', name='password')
+    input(type='submit', value='Login')
