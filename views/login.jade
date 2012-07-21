@@ -6,7 +6,7 @@ block content
     if flashMessage.length > 0
       .errorMessage #{flashMessage}
     label.loginField Email
-      input(type='text', name='email')
+      input(type='text', name='email', value='#{email}')
     label.loginField Password
       input(type='password', name='password')
     input(type='submit', value='Login')

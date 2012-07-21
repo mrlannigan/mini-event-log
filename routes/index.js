@@ -1,4 +1,9 @@
 
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    UserUtilities = require('../utilities/user');
+
+
 /**
  * GET home page.
  */
@@ -12,10 +17,13 @@ exports.index = function(req, res){
  */
 
 exports.login = function(req, res) {
-	res.render('login', {
-		title: 'Login - Mini Event Log',
-		flashMessage: ''
-	});
+  res.render('login', {
+    title: 'Login - Mini Event Log',
+    flashMessage: req.session.flashMessage || req.flashMessage || '',
+    email: req.session.email || ''
+  });
+
+  if (req.session.flashMessage) delete req.session.flashMessage;
 }
 
 /**
@@ -24,7 +32,32 @@ exports.login = function(req, res) {
  */
 
 exports.doLogin = function(req, res) {
-	res.redirect('/login');
+
+  req.session.isLoggedIn = false;
+
+  var returnBad = function (msg) {
+    req.session.flashMessage = msg || '';
+    res.redirect('/login');
+    return false;
+  }
+
+  var timeout = setTimeout(function () {
+    returnBad('Login timed out, please try again.');
+  }, 20000);
+
+  UserUtilities.checkCreds(req, function (err, result) {
+    clearTimeout(timeout);
+
+    if (err) {
+      req.session.flashMessage = err.toString();
+      res.redirect('/login');
+      return;
+    }
+
+    res.redirect('/');
+    return;
+  });
+
 }
 
 /**
@@ -32,6 +65,7 @@ exports.doLogin = function(req, res) {
  */
 
 exports.logout = function(req, res) {
-	req.session.isLoggedIn = false;
-	res.redirect('/login');
+  req.session.isLoggedIn = false;
+  req.session.flashMessage = 'Logged out';
+  res.redirect('/login');
 }

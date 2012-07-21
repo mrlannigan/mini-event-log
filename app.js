@@ -6,7 +6,8 @@
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , user = require('./utilities/user');
+  , user = require('./utilities/user')
+  , mongoose = require('mongoose');
 
 var app = express();
 
@@ -35,6 +36,10 @@ app.get('/login', routes.login);
 app.post('/login', routes.doLogin);
 app.get('/logout', routes.logout);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
+mongoose.connect(app.get('mongouri'), function() {
+  console.log('Connected to mongoDB.');
+
+  http.createServer(app).listen(app.get('port'), function(){
+    console.log("Express server listening on port " + app.get('port'));
+  });
+})
