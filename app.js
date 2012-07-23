@@ -19,7 +19,14 @@ app.configure(function(){
   app.set('mongouri', process.env.MONGOLAB_URI || 'mongodb://localhost/minieventlog');
 
   app.use(express.favicon());
-  app.use(express.logger('dev'));
+  app.use(express.logger({
+    format: 'dev',
+    stream: {
+      write: function(str){
+        app.logger.info(str.substr(0, str.length - 1));
+      }
+    }
+  }));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser(process.env.COOKIE_SECRET || 'your secret here'));
